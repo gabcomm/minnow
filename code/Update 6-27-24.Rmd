@@ -1,0 +1,209 @@
+---
+title: "Minnow Project"
+author: "Gabriella Commisso"
+date: "2024-06-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r loading required packages}
+require(fishtree)
+require(phytools)
+require(geiger)
+require(ape)
+require(geomorph)
+```
+
+```{r loading dataset and checking phylogenetics}
+
+#reading Rabosky et al. 2018 tree
+tree<-fishtree_phylogeny()
+
+#uploading data
+minnow_data <- readxl::read_xlsx("C:/Users/Test 1/OneDrive/Documents/AbCav Project/data_ouwie.xlsx")
+
+#checking data against tree
+rownames(minnow_data) <- minnow_data$Species
+d<-name.check(tree, minnow_data) 
+d
+
+#dropping excess species
+phy.mcc <- drop.tip(tree,d$tree_not_data)
+plot(phy.mcc, cex = 0.8)
+write.nexus(phy.mcc, file = "C:/Users/Test 1/OneDrive/Documents/AbCav Project/droptiptree.nexus", translate = TRUE)
+```
+
+```{r labelling variables}
+size<-minnow_data$`Standard Length`
+names(size)<-rownames(minnow_data)
+maxlgn<-minnow_data$`Max Length`
+names(maxlgn)<-rownames(minnow_data)
+diet<-minnow_data$Trophic
+names(diet)<-rownames(minnow_data)
+acv <- minnow_data$ABV
+names(acv) <- rownames(minnow_data)
+itl <- minnow_data$`Intestine Length`
+names(itl) <- rownames(minnow_data)
+acv.log <- minnow_data$ABV_log
+names(acv.log) <- rownames(minnow_data)
+itl.log <- minnow_data$IL_log
+names(itl.log) <- rownames(minnow_data)
+sc.itl <- minnow_data$IL_resid
+names(sc.itl) <- rownames(minnow_data)
+sc.acv <- minnow_data$ABV_resid
+names(sc.acv) <- rownames(minnow_data)
+```
+
+```{r plotting body length vs intestine length}
+plot(log(size), itl.log, 
+     main = "Body Length vs Intestine Length",
+     xlab = "Log-transformed Body Length (mm)",
+     ylab = "Log-transformed Intestine Length (mm)",
+     pch = 19,
+     text(3.6, 2.65, labels="Rsq=0.647"),
+     col = ifelse(minnow_data$`Trophic` == "HD", "#33a02c", 
+                         ifelse(minnow_data$`Trophic` == "AquaticInvertivore", "#b2df8a", 
+                                ifelse(minnow_data$`Trophic` == "Omnivore", "grey", 
+                                       ifelse(minnow_data$`Trophic` == "AquaticInsectivore", "#a6cee3",
+                                              ifelse(minnow_data$`Trophic` == "InsectLarvaphage", "#1f78b4", "#363636"))))))
+
+legend(x = "topleft", title="Legend", cex = 0.6,
+  legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
+  fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
+pglsmodel1<-procD.pgls(log(size) ~ itl.log, phy=phy.mcc, iter = 10000)
+summary(pglsmodel1)
+plot(pglsmodel1, type="regression", reg.type="RegScore", predictor = minnow_data$IL_log)
+abline(pglsmodel1)
+```
+
+```{r plotting body length vs abdominal cavity volume}
+plot(log(size), acv.log, 
+     main = "Body Length vs Abdominal Cavity Volume",
+     xlab = "Log-transformed Body Length (mm)",
+     ylab = "Log-transformed Abdominal Cavity Volume (mm3)",
+     pch = 19,
+     text(3.6, 2.65, labels="Rsq=0.647"),
+     col = ifelse(minnow_data$`Trophic` == "HD", "#33a02c", 
+                         ifelse(minnow_data$`Trophic` == "AquaticInvertivore", "#b2df8a", 
+                                ifelse(minnow_data$`Trophic` == "Omnivore", "grey", 
+                                       ifelse(minnow_data$`Trophic` == "AquaticInsectivore", "#a6cee3",
+                                              ifelse(minnow_data$`Trophic` == "InsectLarvaphage", "#1f78b4", "#363636"))))))
+
+legend(x = "topleft", title="Legend", cex = 0.6,
+  legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
+  fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
+pglsmodel2<-procD.pgls(log(size) ~ itl.log, phy=phy.mcc, iter = 10000)
+summary(pglsmodel2)
+plot(pglsmodel2, type="regression", reg.type="RegScore", predictor = minnow_data$IL_log)
+abline(pglsmodel2)
+```
+
+```{r plotting intestine length vs abdominal cavity vol}
+plot(itl.log, acv.log, 
+     main = "Intestine Length vs Abdominal Cavity Volume",
+     xlab = "Log-transformed Intestine Length (mm)",
+     ylab = "Log-transformed Abdominal Cavity Volume (mm3)",
+     pch = 19,
+     text(1.35, 3.75, labels="Rsq=0.489"),
+     col = ifelse(minnow_data$`Trophic` == "HD", "#33a02c", 
+                  ifelse(minnow_data$`Trophic` == "AquaticInvertivore", "#b2df8a", 
+                         ifelse(minnow_data$`Trophic` == "Omnivore", "grey", 
+                                ifelse(minnow_data$`Trophic` == "AquaticInsectivore", "#a6cee3",
+                                       ifelse(minnow_data$`Trophic` == "InsectLarvaphage", "#1f78b4", "#363636"))))))
+
+legend(x = "topleft", title="Legend", cex = 0.6,
+       legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
+       fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
+pglsmodel3<-procD.pgls(itl.log ~ acv.log, phy=phy.mcc, iter = 10000)
+summary(pglsmodel3)
+abline(pglsmodel3)
+```
+
+```{r intestine length/trophic group}
+boxplot(sc.itl ~ minnow_data$Trophic,
+        xaxt = "n",
+        data = minnow_data,
+        main = "Intestine Length",
+        xlab = "Trophic Group",
+        ylab = "Size-Corrected Intestine Length",
+        col = c("#a6cee3", "#b2df8a", "#363636", "#33a02c", "#1f78b4", "grey"),
+        names = c("Aq. Insectivore","Aq. Invertivore","Carnivore", "HD", "Insect Larvaphage", "Omnivore"))
+legend(x = "bottom", cex = 1, horiz=TRUE, inset=c(0, -.15), xpd=TRUE,
+       legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
+       fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
+eco<-minnow_data$Trophic
+names(eco)<-rownames(minnow_data)
+trophic.anova<-procD.pgls(sc.itl~eco, phy=phy.mcc, iter = 10000)
+summary(trophic.anova)
+gp <-  interaction (eco)
+PW <- pairwise(trophic.anova, groups = gp, covariate = NULL)
+summary(PW)
+```
+
+```{r size-corrected ab cav/trophic group}
+boxplot(sc.acv ~ minnow_data$Trophic,
+        xaxt = "n",
+        data = minnow_data,
+        main = "Abdominal Cavity Volume",
+        xlab = "Trophic Group",
+        ylab = "Size-Corrected Abdominal Cavity Volume",
+        col = c("#a6cee3", "#b2df8a", "#363636", "#33a02c", "#1f78b4", "grey"),
+        names = c("Aq. Insectivore","Aq. Invertivore","Carnivore", "HD", "Insect Larvaphage", "Omnivore"))
+legend(x = "topleft", title="Legend", cex = 0.6,
+       legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
+       fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
+eco<-dat3$Trophic
+names(eco)<-rownames(dat3)
+trophic.anova<-procD.pgls(sc.acv~eco, phy=phy.mcc, iter = 10000)
+summary(trophic.anova)
+gp <-  interaction (eco)
+PW <- pairwise(trophic.anova, groups = gp, covariate = NULL)
+summary(PW)
+```
+
+```{r measured body length/trophic group}
+boxplot(log(size) ~ minnow_data$Trophic,
+        xaxt = "n",
+        data = minnow_data,
+        main = "Body Length by Trophic Group",
+        xlab = "Trophic Group",
+        ylab = "Body Length Log",
+        col = c("#a6cee3", "#b2df8a", "black", "#33a02c", "#1f78b4", "grey"),
+        names = c("Aq. Insectivore","Aq. Invertivore","Carnivore", "HD", "Insect Larvaphage", "Omnivore"))
+legend(x = "topleft", title="Legend", cex = 0.6,
+       legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
+       fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "black"))
+eco<-dat3$Trophic
+names(eco)<-rownames(dat3)
+trophic.anova<-procD.pgls(log(size)~eco, phy=phy.mcc, iter = 10000)
+summary(trophic.anova)
+gp <-  interaction (eco)
+PW <- pairwise(trophic.anova, groups = gp, covariate = NULL)
+summary(PW)
+```
+
+```{r max body length/trophic}
+boxplot(log(maxlgn) ~ minnow_data$Trophic,
+        xaxt = "n",
+        data = minnow_data,
+        main = "Maximum Body Length",
+        xlab = "Trophic Group",
+        ylab = "Log-adjusted Maximum Body Length (mm)",
+        col = c("#a6cee3", "#b2df8a", "#363636", "#33a02c", "#1f78b4", "grey"),
+        names = c("Aq. Insectivore","Aq. Invertivore","Carnivore", "HD", "Insect Larvaphage", "Omnivore"))
+legend(x = "topleft", title="Legend", cex = 0.6,
+       legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
+       fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
+eco<-dat3$Trophic
+names(eco)<-rownames(dat3)
+trophic.anova<-procD.pgls(log(maxlgn)~eco, phy=phy.mcc, iter = 10000)
+summary(trophic.anova)
+gp <-  interaction (eco)
+PW <- pairwise(trophic.anova, groups = gp, covariate = NULL)
+summary(PW)
+```
