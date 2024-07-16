@@ -77,8 +77,8 @@ legend(x = "topleft", title="Legend", cex = 0.6,
   fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
 pglsmodel1<-procD.pgls(log(size) ~ itl.log, phy=phy.mcc, iter = 10000)
 summary(pglsmodel1)
-plot(pglsmodel1, type="regression", reg.type="RegScore", predictor = minnow_data$IL_log)
-abline(pglsmodel1)
+#plot(pglsmodel1, type="regression", reg.type="RegScore", predictor = minnow_data$IL_log)
+#abline(pglsmodel1)
 ```
 
 ```{r plotting body length vs abdominal cavity volume}
@@ -157,8 +157,8 @@ boxplot(sc.acv ~ minnow_data$Trophic,
 legend(x = "topleft", title="Legend", cex = 0.6,
        legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
        fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
-eco<-dat3$Trophic
-names(eco)<-rownames(dat3)
+eco<-minnow_data$Trophic
+names(eco)<-rownames(minnow_data)
 trophic.anova<-procD.pgls(sc.acv~eco, phy=phy.mcc, iter = 10000)
 summary(trophic.anova)
 gp <-  interaction (eco)
@@ -178,8 +178,8 @@ boxplot(log(size) ~ minnow_data$Trophic,
 legend(x = "topleft", title="Legend", cex = 0.6,
        legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
        fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "black"))
-eco<-dat3$Trophic
-names(eco)<-rownames(dat3)
+eco<-minnow_data$Trophic
+names(eco)<-rownames(minnow_data)
 trophic.anova<-procD.pgls(log(size)~eco, phy=phy.mcc, iter = 10000)
 summary(trophic.anova)
 gp <-  interaction (eco)
@@ -199,8 +199,8 @@ boxplot(log(maxlgn) ~ minnow_data$Trophic,
 legend(x = "topleft", title="Legend", cex = 0.6,
        legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
        fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
-eco<-dat3$Trophic
-names(eco)<-rownames(dat3)
+eco<-minnow_data$Trophic
+names(eco)<-rownames(minnow_data)
 trophic.anova<-procD.pgls(log(maxlgn)~eco, phy=phy.mcc, iter = 10000)
 summary(trophic.anova)
 gp <-  interaction (eco)
