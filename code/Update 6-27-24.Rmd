@@ -76,24 +76,26 @@ abline(pglsmodel1)
 legend(x = "topleft", title="Legend", cex = 0.6,
   legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
   fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
-pglsmodel1<-procD.pgls(log(size) ~ itl.log, phy=phy.mcc, iter = 10000)
+pglsmodel1<-procD.pgls(itl.log ~ log(size), phy=phy.mcc, iter = 10000)
 summary(pglsmodel1)
+coef1 <- coefficients(pglsmodel1)
+intercept1<-coef1[1] 
+slope1<- coef1[2]
 #plot(pglsmodel1, type="regression", reg.type="RegScore", predictor = minnow_data$IL_log)
 abline(pglsmodel1)
 ```
+help
+
+
 ```{r experimenting w ggplot}
 yup<-ggplot(minnow_data,aes(log(size),itl.log, color=Trophic))+
   scale_color_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
   geom_point(size=2.5)+
-  geom_smooth(
-  #geom_errorbar(data=pim_vig_data,mapping=aes(x=x,ymin=conf.low,ymax=conf.high),width=0.03)+
-  #geom_line(aes(group=group))+
+  geom_abline(intercept = intercept1, slope = slope1, color="red")+ 
   ylab("Log-transformed Intestine Length (mm)")+
   xlab("Log-transformed Body Length (mm)")+
   theme_minimal()+
   theme(plot.title=element_text(size=14,hjust=0.5,face="plain"),axis.text.y=element_text(size=14),axis.title.y=element_text(size=14),axis.text.x=element_text(size=14),axis.title.x=element_text(size=10),panel.background=element_rect(fill="white",color="black"),panel.grid.major=element_line(color="grey95"),panel.grid.minor=element_line(color=NA),plot.margin=unit(c(0,0,0,0),"cm"))
-#scale_x_discrete(limits=rev(levels(pr_port_dt$x)),labels=c("historical","contemporary"))+
-#theme(legend.position="none")
 yup
 ```
 
