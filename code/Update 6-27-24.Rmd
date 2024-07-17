@@ -17,6 +17,7 @@ require(phytools)
 require(geiger)
 require(ape)
 require(geomorph)
+require(ggplot2)
 ```
 
 ```{r loading dataset and checking phylogenetics}
@@ -71,14 +72,29 @@ lgn_vs_int_plot <- plot(log(size), itl.log,
                                 ifelse(minnow_data$`Trophic` == "Omnivore", "grey", 
                                        ifelse(minnow_data$`Trophic` == "AquaticInsectivore", "#a6cee3",
                                               ifelse(minnow_data$`Trophic` == "InsectLarvaphage", "#1f78b4", "#363636"))))))
-
+abline(pglsmodel1)
 legend(x = "topleft", title="Legend", cex = 0.6,
   legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
   fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
 pglsmodel1<-procD.pgls(log(size) ~ itl.log, phy=phy.mcc, iter = 10000)
 summary(pglsmodel1)
 #plot(pglsmodel1, type="regression", reg.type="RegScore", predictor = minnow_data$IL_log)
-#abline(pglsmodel1)
+abline(pglsmodel1)
+```
+```{r experimenting w ggplot}
+yup<-ggplot(minnow_data,aes(log(size),itl.log, color=Trophic))+
+  scale_color_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
+  geom_point(size=2.5)+
+  geom_smooth(
+  #geom_errorbar(data=pim_vig_data,mapping=aes(x=x,ymin=conf.low,ymax=conf.high),width=0.03)+
+  #geom_line(aes(group=group))+
+  ylab("Log-transformed Intestine Length (mm)")+
+  xlab("Log-transformed Body Length (mm)")+
+  theme_minimal()+
+  theme(plot.title=element_text(size=14,hjust=0.5,face="plain"),axis.text.y=element_text(size=14),axis.title.y=element_text(size=14),axis.text.x=element_text(size=14),axis.title.x=element_text(size=10),panel.background=element_rect(fill="white",color="black"),panel.grid.major=element_line(color="grey95"),panel.grid.minor=element_line(color=NA),plot.margin=unit(c(0,0,0,0),"cm"))
+#scale_x_discrete(limits=rev(levels(pr_port_dt$x)),labels=c("historical","contemporary"))+
+#theme(legend.position="none")
+yup
 ```
 
 ```{r plotting body length vs abdominal cavity volume}
@@ -123,11 +139,11 @@ pglsmodel3<-procD.pgls(itl.log ~ acv.log, phy=phy.mcc, iter = 10000)
 summary(pglsmodel3)
 abline(pglsmodel3)
 ```
+
 ```{r creating figure for paper}
 par(mfrow=c(1,3))
-lgn_vs_int_plot
-lgn_vs_acv_plot
-int_vs_acv_plot
+yup
+
 ```
 
 ```{r intestine length/trophic group}
