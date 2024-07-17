@@ -60,91 +60,58 @@ sc.acv <- minnow_data$ABV_resid
 names(sc.acv) <- rownames(minnow_data)
 ```
 
-```{r plotting body length vs intestine length}
-lgn_vs_int_plot <- plot(log(size), itl.log, 
-     main = "Body Length vs Intestine Length",
-     xlab = "Log-transformed Body Length (mm)",
-     ylab = "Log-transformed Intestine Length (mm)",
-     pch = 19,
-     text(3.6, 2.65, labels="Rsq=0.647"),
-     col = ifelse(minnow_data$`Trophic` == "HD", "#33a02c", 
-                         ifelse(minnow_data$`Trophic` == "AquaticInvertivore", "#b2df8a", 
-                                ifelse(minnow_data$`Trophic` == "Omnivore", "grey", 
-                                       ifelse(minnow_data$`Trophic` == "AquaticInsectivore", "#a6cee3",
-                                              ifelse(minnow_data$`Trophic` == "InsectLarvaphage", "#1f78b4", "#363636"))))))
-abline(pglsmodel1)
-legend(x = "topleft", title="Legend", cex = 0.6,
-  legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
-  fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
+
+```{r ggplot body length vs intestine length}
 pglsmodel1<-procD.pgls(itl.log ~ log(size), phy=phy.mcc, iter = 10000)
 summary(pglsmodel1)
 coef1 <- coefficients(pglsmodel1)
 intercept1<-coef1[1] 
 slope1<- coef1[2]
-#plot(pglsmodel1, type="regression", reg.type="RegScore", predictor = minnow_data$IL_log)
-abline(pglsmodel1)
-```
-help
-
-
-```{r experimenting w ggplot}
-yup<-ggplot(minnow_data,aes(log(size),itl.log, color=Trophic))+
+reg1<-ggplot(minnow_data,aes(log(size),itl.log, color=Trophic))+
   scale_color_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
   geom_point(size=2.5)+
   geom_abline(intercept = intercept1, slope = slope1, color="red")+ 
-  ylab("Log-transformed Intestine Length (mm)")+
-  xlab("Log-transformed Body Length (mm)")+
-  theme_minimal()+
-  theme(plot.title=element_text(size=14,hjust=0.5,face="plain"),axis.text.y=element_text(size=14),axis.title.y=element_text(size=14),axis.text.x=element_text(size=14),axis.title.x=element_text(size=10),panel.background=element_rect(fill="white",color="black"),panel.grid.major=element_line(color="grey95"),panel.grid.minor=element_line(color=NA),plot.margin=unit(c(0,0,0,0),"cm"))
-yup
+  ylab("Log-Int Length (mm)")+
+  xlab("Log-Body Length (mm)")
+reg1
 ```
 
-```{r plotting body length vs abdominal cavity volume}
-lgn_vs_acv_plot <- plot(log(size), acv.log, 
-     main = "Body Length vs Abdominal Cavity Volume",
-     xlab = "Log-transformed Body Length (mm)",
-     ylab = "Log-transformed Abdominal Cavity Volume (mm3)",
-     pch = 19,
-     text(3.6, 2.65, labels="Rsq=0.647"),
-     col = ifelse(minnow_data$`Trophic` == "HD", "#33a02c", 
-                         ifelse(minnow_data$`Trophic` == "AquaticInvertivore", "#b2df8a", 
-                                ifelse(minnow_data$`Trophic` == "Omnivore", "grey", 
-                                       ifelse(minnow_data$`Trophic` == "AquaticInsectivore", "#a6cee3",
-                                              ifelse(minnow_data$`Trophic` == "InsectLarvaphage", "#1f78b4", "#363636"))))))
-
-legend(x = "topleft", title="Legend", cex = 0.6,
-  legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
-  fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
-pglsmodel2<-procD.pgls(log(size) ~ itl.log, phy=phy.mcc, iter = 10000)
+```{r ggplot body length vs abdominal cavity volume}
+pglsmodel2<-procD.pgls(acv.log ~ log(size), phy=phy.mcc, iter = 10000)
 summary(pglsmodel2)
-#plot(pglsmodel2, type="regression", reg.type="RegScore", predictor = minnow_data$IL_log)
-#abline(pglsmodel2)
+coef2 <- coefficients(pglsmodel2)
+intercept2<-coef2[1] 
+slope2<- coef2[2]
+reg2<-ggplot(minnow_data,aes(log(size),acv.log, color=Trophic))+
+  scale_color_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
+  geom_point(size=2.5)+
+  geom_abline(intercept = intercept2, slope = slope2, color="red")+ 
+  ylab("Log-AbCav Vol (mm3)")+
+  xlab("Log-Body Length (mm)")
+reg2
 ```
 
-```{r plotting intestine length vs abdominal cavity vol}
-int_vs_acv_plot <- plot(itl.log, acv.log, 
-     main = "Intestine Length vs Abdominal Cavity Volume",
-     xlab = "Log-transformed Intestine Length (mm)",
-     ylab = "Log-transformed Abdominal Cavity Volume (mm3)",
-     pch = 19,
-     text(1.35, 3.75, labels="Rsq=0.489"),
-     col = ifelse(minnow_data$`Trophic` == "HD", "#33a02c", 
-                  ifelse(minnow_data$`Trophic` == "AquaticInvertivore", "#b2df8a", 
-                         ifelse(minnow_data$`Trophic` == "Omnivore", "grey", 
-                                ifelse(minnow_data$`Trophic` == "AquaticInsectivore", "#a6cee3",
-                                       ifelse(minnow_data$`Trophic` == "InsectLarvaphage", "#1f78b4", "#363636"))))))
-
-legend(x = "topleft", title="Legend", cex = 0.6,
-       legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
-       fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
-pglsmodel3<-procD.pgls(itl.log ~ acv.log, phy=phy.mcc, iter = 10000)
+```{r ggplot intestine length vs abdominal cavity volume}
+pglsmodel3<-procD.pgls(acv.log ~ itl.log, phy=phy.mcc, iter = 10000)
 summary(pglsmodel3)
-abline(pglsmodel3)
+coef3 <- coefficients(pglsmodel3)
+intercept3<-coef3[1] 
+slope3<- coef3[2]
+reg3<-ggplot(minnow_data,aes(itl.log, acv.log, color=Trophic))+
+  scale_color_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
+  geom_point(size=2.5)+
+  geom_abline(intercept = intercept3, slope = slope3, color="red")+ 
+  ylab("Log-AbCav Vol (mm3)")+
+  xlab("Log-Int Length (mm)")
+reg3
 ```
 
 ```{r creating figure for paper}
-par(mfrow=c(1,3))
-yup
+library(ggpubr)
+reg_figure <- ggarrange(reg1, reg2, reg3,
+                    labels = c("a", "b", "c"),
+                    ncol = 1, nrow = 3)
+reg_figure
 
 ```
 
