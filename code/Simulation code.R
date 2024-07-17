@@ -1,3 +1,4 @@
+#code written by Dr. Michael D. Burns (mdburns@ucdavis.edu)
 
 require(phytools)
 require(evobiR)

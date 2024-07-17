@@ -1,3 +1,5 @@
+#code written by Dr. Michael D. Burns (mdburns@ucdavis.edu)
+
 require(phytools)
 
 tree<-read.nexus("tree.nexus")
