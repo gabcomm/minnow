@@ -106,7 +106,7 @@ reg3<-ggplot(minnow_data,aes(itl.log, acv.log, color=Trophic))+
 reg3
 ```
 
-```{r creating figure for paper}
+```{r creating regression figure for paper}
 library(ggpubr)
 reg_figure <- ggarrange(reg1, reg2, reg3,
                     labels = c("a", "b", "c"),
@@ -114,18 +114,14 @@ reg_figure <- ggarrange(reg1, reg2, reg3,
 reg_figure
 ```
 
-```{r intestine length/trophic group}
-boxplot(sc.itl ~ minnow_data$Trophic,
-        xaxt = "n",
-        data = minnow_data,
-        main = "Intestine Length",
-        xlab = "Trophic Group",
-        ylab = "Size-Corrected Intestine Length",
-        col = c("#a6cee3", "#b2df8a", "#363636", "#33a02c", "#1f78b4", "grey"),
-        names = c("Aq. Insectivore","Aq. Invertivore","Carnivore", "HD", "Insect Larvaphage", "Omnivore"))
-legend(x = "bottom", cex = 1, horiz=TRUE, inset=c(0, -.15), xpd=TRUE,
-       legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
-       fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
+```{r size-corrected intestine length vs trophic group}
+box1<-ggplot(minnow_data,aes(Trophic, sc.itl, fill=Trophic))+
+  geom_boxplot()+
+  scale_fill_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
+  ylab("Size-Corrected Intestine Length")+
+  xlab("Trophic Group")+
+  theme(legend.position='none', axis.text.x = element_blank())
+box1
 eco<-minnow_data$Trophic
 names(eco)<-rownames(minnow_data)
 trophic.anova<-procD.pgls(sc.itl~eco, phy=phy.mcc, iter = 10000)
@@ -136,17 +132,13 @@ summary(PW)
 ```
 
 ```{r size-corrected ab cav/trophic group}
-boxplot(sc.acv ~ minnow_data$Trophic,
-        xaxt = "n",
-        data = minnow_data,
-        main = "Abdominal Cavity Volume",
-        xlab = "Trophic Group",
-        ylab = "Size-Corrected Abdominal Cavity Volume",
-        col = c("#a6cee3", "#b2df8a", "#363636", "#33a02c", "#1f78b4", "grey"),
-        names = c("Aq. Insectivore","Aq. Invertivore","Carnivore", "HD", "Insect Larvaphage", "Omnivore"))
-legend(x = "topleft", title="Legend", cex = 0.6,
-       legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
-       fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
+box2<-ggplot(minnow_data,aes(Trophic, sc.acv, fill=Trophic))+
+  geom_boxplot()+
+  scale_fill_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
+  ylab("Size-Corrected Abdominal Cavity Vol")+
+  xlab("Trophic Group")+
+  theme(legend.position='none', axis.text.x = element_blank())
+box2
 eco<-minnow_data$Trophic
 names(eco)<-rownames(minnow_data)
 trophic.anova<-procD.pgls(sc.acv~eco, phy=phy.mcc, iter = 10000)
@@ -157,17 +149,13 @@ summary(PW)
 ```
 
 ```{r measured body length/trophic group}
-boxplot(log(size) ~ minnow_data$Trophic,
-        xaxt = "n",
-        data = minnow_data,
-        main = "Body Length by Trophic Group",
-        xlab = "Trophic Group",
-        ylab = "Body Length Log",
-        col = c("#a6cee3", "#b2df8a", "black", "#33a02c", "#1f78b4", "grey"),
-        names = c("Aq. Insectivore","Aq. Invertivore","Carnivore", "HD", "Insect Larvaphage", "Omnivore"))
-legend(x = "topleft", title="Legend", cex = 0.6,
-       legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
-       fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "black"))
+box3<-ggplot(minnow_data,aes(Trophic, log(size), fill=Trophic))+
+  geom_boxplot()+
+  scale_fill_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
+  ylab("Log Body Length")+
+  xlab("Trophic Group")+
+  theme(legend.position='none', axis.text.x = element_blank())
+box3
 eco<-minnow_data$Trophic
 names(eco)<-rownames(minnow_data)
 trophic.anova<-procD.pgls(log(size)~eco, phy=phy.mcc, iter = 10000)
@@ -178,17 +166,12 @@ summary(PW)
 ```
 
 ```{r max body length/trophic}
-boxplot(log(maxlgn) ~ minnow_data$Trophic,
-        xaxt = "n",
-        data = minnow_data,
-        main = "Maximum Body Length",
-        xlab = "Trophic Group",
-        ylab = "Log-adjusted Maximum Body Length (mm)",
-        col = c("#a6cee3", "#b2df8a", "#363636", "#33a02c", "#1f78b4", "grey"),
-        names = c("Aq. Insectivore","Aq. Invertivore","Carnivore", "HD", "Insect Larvaphage", "Omnivore"))
-legend(x = "topleft", title="Legend", cex = 0.6,
-       legend=c("Herbivore-Detritivore", "Aquatic Invertivore", "Aquatic Insectivore", "Insect Larvaphage", "Omnivore", "Carnivore"), 
-       fill = c("#33a02c", "#b2df8a", "#a6cee3", "#1f78b4", "grey", "#363636"))
+box4<-ggplot(minnow_data,aes(Trophic, log(maxlgn), fill=Trophic))+
+  geom_boxplot()+
+  scale_fill_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
+  ylab("Log Maximum Body Length")+
+  xlab("Trophic Group")
+box4
 eco<-minnow_data$Trophic
 names(eco)<-rownames(minnow_data)
 trophic.anova<-procD.pgls(log(maxlgn)~eco, phy=phy.mcc, iter = 10000)
@@ -196,4 +179,12 @@ summary(trophic.anova)
 gp <-  interaction (eco)
 PW <- pairwise(trophic.anova, groups = gp, covariate = NULL)
 summary(PW)
+```
+
+```{r creating regression figure for paper}
+library(ggpubr)
+box_figure <- ggarrange(box1, box2, box3,
+                    labels = c("a", "b", "c"),
+                    ncol = 3, nrow = 1)
+box_figure
 ```
