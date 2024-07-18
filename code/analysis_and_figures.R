@@ -329,3 +329,13 @@ pglsmodel6<-procD.pgls(sc.itl ~ sc.acv, phy=phy.mcc, iter = 10000)
 summary(pglsmodel6)
 abline(pglsmodel6)
 #testing
+
+reg_figure <- ggarrange(reg1, reg2, reg3,
+                        labels = c("a", "b", "c"),
+                        ncol = 1, nrow = 3)
+reg_figure
+
+box_figure <- ggarrange(box1, box2, box3,
+                        labels = c("a", "b", "c"),
+                        ncol = 3, nrow = 1)
+box_figure
