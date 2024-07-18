@@ -112,7 +112,6 @@ reg_figure <- ggarrange(reg1, reg2, reg3,
                     labels = c("a", "b", "c"),
                     ncol = 1, nrow = 3)
 reg_figure
-
 ```
 
 ```{r intestine length/trophic group}
