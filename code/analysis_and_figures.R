@@ -339,3 +339,5 @@ box_figure <- ggarrange(box1, box2, box3,
                         labels = c("a", "b", "c"),
                         ncol = 3, nrow = 1)
 box_figure
+
+sup_figure
