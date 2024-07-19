@@ -18,6 +18,7 @@ require(geiger)
 require(ape)
 require(geomorph)
 require(ggplot2)
+require(ggpubr)
 ```
 
 ```{r loading dataset and checking phylogenetics}
@@ -72,7 +73,8 @@ reg1<-ggplot(minnow_data,aes(log(size),itl.log, color=Trophic))+
   geom_point(size=2.5)+
   geom_abline(intercept = intercept1, slope = slope1, color="red")+ 
   ylab("Log-Int Length (mm)")+
-  xlab("Log-Body Length (mm)")
+  xlab("Log-Body Length (mm)")+
+  annotate("text", x=3.75, y=2.8, label= "R = 0.648")
 reg1
 ```
 
@@ -87,7 +89,8 @@ reg2<-ggplot(minnow_data,aes(log(size),acv.log, color=Trophic))+
   geom_point(size=2.5)+
   geom_abline(intercept = intercept2, slope = slope2, color="red")+ 
   ylab("Log-AbCav Vol (mm3)")+
-  xlab("Log-Body Length (mm)")
+  xlab("Log-Body Length (mm)")+
+  annotate("text", x=3.75, y=3.9, label= "R = 0.876")
 reg2
 ```
 
@@ -102,12 +105,12 @@ reg3<-ggplot(minnow_data,aes(itl.log, acv.log, color=Trophic))+
   geom_point(size=2.5)+
   geom_abline(intercept = intercept3, slope = slope3, color="red")+ 
   ylab("Log-AbCav Vol (mm3)")+
-  xlab("Log-Int Length (mm)")
+  xlab("Log-Int Length (mm)")+
+  annotate("text", x=1.4, y=3.9, label= "R = 0.489")
 reg3
 ```
 
 ```{r creating regression figure for paper}
-library(ggpubr)
 reg_figure <- ggarrange(reg1, reg2, reg3,
                     labels = c("a", "b", "c"),
                     ncol = 1, nrow = 3)
@@ -182,9 +185,60 @@ summary(PW)
 ```
 
 ```{r creating regression figure for paper}
-library(ggpubr)
 box_figure <- ggarrange(box1, box2, box3,
                     labels = c("a", "b", "c"),
                     ncol = 3, nrow = 1)
 box_figure
+```
+
+```{r size-corrected supplementary figures}
+#body length/int length
+pglsmodel4<-procD.pgls(sc.itl ~ log(size), phy=phy.mcc, iter = 10000)
+summary(pglsmodel4)
+coef4 <- coefficients(pglsmodel4)
+intercept4<-coef4[1] 
+slope4<- coef4[2]
+reg4<-ggplot(minnow_data,aes(log(size), sc.itl, color=Trophic))+
+  scale_color_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
+  geom_point(size=2.5)+
+  geom_abline(intercept = intercept4, slope = slope4, color="red")+ 
+  ylab("Size-Cor Int Length (mm)")+
+  xlab("Log- Body Length (mm)")+
+  annotate("text", x=3.75, y=2.8, label= "R = 0.00005")
+reg4
+#body length/abcav vol
+pglsmodel5<-procD.pgls(sc.acv ~ log(size), phy=phy.mcc, iter = 10000)
+summary(pglsmodel5)
+coef5 <- coefficients(pglsmodel5)
+intercept5<-coef5[1] 
+slope5<- coef5[2]
+reg5<-ggplot(minnow_data,aes(log(size), sc.acv, color=Trophic))+
+  scale_color_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
+  geom_point(size=2.5)+
+  geom_abline(intercept = intercept5, slope = slope5, color="red")+ 
+  ylab("Size-Cor AbCav Vol (mm3)")+
+  xlab("Log- Body Length (mm)")+
+  annotate("text", x=3.75, y=2.8, label= "R = 0.00001")
+reg5
+#intestine length/abcav
+pglsmodel6<-procD.pgls(sc.acv ~ sc.itl, phy=phy.mcc, iter = 10000)
+summary(pglsmodel6)
+coef6 <- coefficients(pglsmodel6)
+intercept6<-coef6[1] 
+slope6<- coef6[2]
+reg6<-ggplot(minnow_data,aes(sc.itl, sc.acv, color=Trophic))+
+  scale_color_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
+  geom_point(size=2.5)+
+  geom_abline(intercept = intercept6, slope = slope6, color="red")+ 
+  ylab("Size-Cor AbCav Vol (mm3)")+
+  xlab("Size-Cor Int Length (mm)")+
+  annotate("text", x=-0.75, y=1, label= "R = 0.069")
+reg6
+```
+
+```{r sup fig 1}
+sup_figure <- ggarrange(reg4, reg5, reg6,
+                    labels = c("a", "b", "c"),
+                    ncol = 1, nrow = 3)
+sup_figure
 ```
