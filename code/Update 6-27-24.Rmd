@@ -242,3 +242,36 @@ sup_figure <- ggarrange(reg4, reg5, reg6,
                     ncol = 1, nrow = 3)
 sup_figure
 ```
+
+```{r sup boxplots}
+#log intestine length
+box5<-ggplot(minnow_data,aes(Trophic, itl.log, fill=Trophic))+
+  geom_boxplot()+
+  scale_fill_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
+  ylab("Log-Adjusted Intestine Length")+
+  xlab("Trophic Group")+
+  theme(legend.position='none', axis.text.x = element_blank())
+box5
+eco<-minnow_data$Trophic
+names(eco)<-rownames(minnow_data)
+trophic.anova<-procD.pgls(itl.log~eco, phy=phy.mcc, iter = 10000)
+summary(trophic.anova)
+gp <-  interaction (eco)
+PW <- pairwise(trophic.anova, groups = gp, covariate = NULL)
+summary(PW)
+#log ab cav volume
+box6<-ggplot(minnow_data,aes(Trophic, acv.log, fill=Trophic))+
+  geom_boxplot()+
+  scale_fill_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
+  ylab("Log-Adjusted Abdominal Cavity Vol")+
+  xlab("Trophic Group")+
+  theme(legend.position='none', axis.text.x = element_blank())
+box6
+eco<-minnow_data$Trophic
+names(eco)<-rownames(minnow_data)
+trophic.anova<-procD.pgls(acv.log~eco, phy=phy.mcc, iter = 10000)
+summary(trophic.anova)
+gp <-  interaction (eco)
+PW <- pairwise(trophic.anova, groups = gp, covariate = NULL)
+summary(PW)
+```
