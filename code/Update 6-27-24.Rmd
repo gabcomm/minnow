@@ -74,7 +74,8 @@ reg1<-ggplot(minnow_data,aes(log(size),itl.log, color=Trophic))+
   geom_abline(intercept = intercept1, slope = slope1, color="red")+ 
   ylab("Log-Int Length (mm)")+
   xlab("Log-Body Length (mm)")+
-  annotate("text", x=3.75, y=2.8, label= "R = 0.648")
+  annotate("text", x=-Inf, y=Inf, hjust=-0.5, vjust=2, label= "R = 0.648") +
+  labs(color = "Trophic\nGroup")
 reg1
 ```
 
@@ -90,7 +91,8 @@ reg2<-ggplot(minnow_data,aes(log(size),acv.log, color=Trophic))+
   geom_abline(intercept = intercept2, slope = slope2, color="red")+ 
   ylab("Log-AbCav Vol (mm3)")+
   xlab("Log-Body Length (mm)")+
-  annotate("text", x=3.75, y=3.9, label= "R = 0.876")
+  annotate("text", x=-Inf, y=Inf, hjust=-0.5, vjust=2, label= "R = 0.876") +
+  labs(color = "Trophic\nGroup")
 reg2
 ```
 
@@ -106,15 +108,18 @@ reg3<-ggplot(minnow_data,aes(itl.log, acv.log, color=Trophic))+
   geom_abline(intercept = intercept3, slope = slope3, color="red")+ 
   ylab("Log-AbCav Vol (mm3)")+
   xlab("Log-Int Length (mm)")+
-  annotate("text", x=1.4, y=3.9, label= "R = 0.489")
+  annotate("text", x=-Inf, y=Inf, hjust=-0.5, vjust=2, label= "R = 0.489") +
+  labs(color = "Trophic\nGroup")
 reg3
 ```
 
 ```{r creating regression figure for paper}
 reg_figure <- ggarrange(reg1, reg2, reg3,
                     labels = c("a", "b", "c"),
-                    ncol = 1, nrow = 3)
+                    ncol = 1, nrow = 3, 
+                    common.legend=TRUE, legend="top")
 reg_figure
+ggsave("REG_TEST.png", plot=last_plot(), path= "C:/Users/Test 1/OneDrive/Desktop/GitHubRepos/minnow", dpi=300, width=5, height=7.78, units="in")
 ```
 
 ```{r size-corrected intestine length vs trophic group}
@@ -122,8 +127,11 @@ box1<-ggplot(minnow_data,aes(Trophic, sc.itl, fill=Trophic))+
   geom_boxplot()+
   scale_fill_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
   ylab("Size-Corrected Intestine Length")+
-  xlab("Trophic Group")+
-  theme(legend.position='none', axis.text.x = element_blank())
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  annotate("text", x=-Inf, y=Inf, hjust=-0.5, vjust=2, label= "p = 0.0012") +
+  labs(fill = "Trophic\nGroup")
 box1
 eco<-minnow_data$Trophic
 names(eco)<-rownames(minnow_data)
@@ -139,8 +147,11 @@ box2<-ggplot(minnow_data,aes(Trophic, sc.acv, fill=Trophic))+
   geom_boxplot()+
   scale_fill_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
   ylab("Size-Corrected Abdominal Cavity Vol")+
-  xlab("Trophic Group")+
-  theme(legend.position='none', axis.text.x = element_blank())
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  annotate("text", x=-Inf, y=Inf, hjust=-0.5, vjust=2, label= "p = 0.7429") +
+  labs(fill = "Trophic\nGroup")
 box2
 eco<-minnow_data$Trophic
 names(eco)<-rownames(minnow_data)
@@ -156,8 +167,11 @@ box3<-ggplot(minnow_data,aes(Trophic, log(size), fill=Trophic))+
   geom_boxplot()+
   scale_fill_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
   ylab("Log Body Length")+
-  xlab("Trophic Group")+
-  theme(legend.position='none', axis.text.x = element_blank())
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  annotate("text", x=-Inf, y=Inf, hjust=-0.5, vjust=2, label= "p = 0.5296") +
+  labs(fill = "Trophic\nGroup")
 box3
 eco<-minnow_data$Trophic
 names(eco)<-rownames(minnow_data)
@@ -173,7 +187,11 @@ box4<-ggplot(minnow_data,aes(Trophic, log(maxlgn), fill=Trophic))+
   geom_boxplot()+
   scale_fill_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
   ylab("Log Maximum Body Length")+
-  xlab("Trophic Group")
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  annotate("text", x=-Inf, y=Inf, hjust=-0.5, vjust=2, label= "p = 0.4856") +
+  labs(fill = "Trophic\nGroup")
 box4
 eco<-minnow_data$Trophic
 names(eco)<-rownames(minnow_data)
@@ -187,8 +205,10 @@ summary(PW)
 ```{r creating regression figure for paper}
 box_figure <- ggarrange(box1, box2, box3,
                     labels = c("a", "b", "c"),
-                    ncol = 3, nrow = 1)
+                    ncol = 3, nrow = 1, 
+                    common.legend=TRUE, legend="bottom")
 box_figure
+ggsave("BOX_TEST.png", plot=last_plot(), path= "C:/Users/Test 1/OneDrive/Desktop/GitHubRepos/minnow", dpi=300, width=8, height=4, units="in")
 ```
 
 ```{r size-corrected supplementary figures}
@@ -204,7 +224,8 @@ reg4<-ggplot(minnow_data,aes(log(size), sc.itl, color=Trophic))+
   geom_abline(intercept = intercept4, slope = slope4, color="red")+ 
   ylab("Size-Cor Int Length (mm)")+
   xlab("Log- Body Length (mm)")+
-  annotate("text", x=3.75, y=2.8, label= "R = 0.00005")
+  annotate("text", x=-Inf, y=Inf, hjust=-0.5, vjust=2, label= "R = 0.0001") +
+  labs(color = "Trophic\nGroup")
 reg4
 #body length/abcav vol
 pglsmodel5<-procD.pgls(sc.acv ~ log(size), phy=phy.mcc, iter = 10000)
@@ -218,7 +239,8 @@ reg5<-ggplot(minnow_data,aes(log(size), sc.acv, color=Trophic))+
   geom_abline(intercept = intercept5, slope = slope5, color="red")+ 
   ylab("Size-Cor AbCav Vol (mm3)")+
   xlab("Log- Body Length (mm)")+
-  annotate("text", x=3.75, y=2.8, label= "R = 0.00001")
+  annotate("text", x=-Inf, y=Inf, hjust=-0.5, vjust=2, label= "R = 0") +
+  labs(color = "Trophic\nGroup")
 reg5
 #intestine length/abcav
 pglsmodel6<-procD.pgls(sc.acv ~ sc.itl, phy=phy.mcc, iter = 10000)
@@ -232,15 +254,18 @@ reg6<-ggplot(minnow_data,aes(sc.itl, sc.acv, color=Trophic))+
   geom_abline(intercept = intercept6, slope = slope6, color="red")+ 
   ylab("Size-Cor AbCav Vol (mm3)")+
   xlab("Size-Cor Int Length (mm)")+
-  annotate("text", x=-0.75, y=1, label= "R = 0.069")
+  annotate("text", x=-Inf, y=Inf, hjust=-0.5, vjust=2, label= "R = 0.0690") +
+  labs(color = "Trophic\nGroup")
 reg6
 ```
 
 ```{r sup fig 1}
-sup_figure <- ggarrange(reg4, reg5, reg6,
+sup_reg_figure <- ggarrange(reg4, reg5, reg6,
                     labels = c("a", "b", "c"),
-                    ncol = 1, nrow = 3)
-sup_figure
+                    ncol = 1, nrow = 3, 
+                    common.legend = TRUE, legend="top")
+sup_reg_figure
+ggsave("SUP_REG.png", plot=last_plot(), path= "C:/Users/Test 1/OneDrive/Desktop/GitHubRepos/minnow", dpi=300, width=5, height=8.25, units="in")
 ```
 
 ```{r sup boxplots}
@@ -249,8 +274,11 @@ box5<-ggplot(minnow_data,aes(Trophic, itl.log, fill=Trophic))+
   geom_boxplot()+
   scale_fill_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
   ylab("Log-Adjusted Intestine Length")+
-  xlab("Trophic Group")+
-  theme(legend.position='none', axis.text.x = element_blank())
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  annotate("text", x=-Inf, y=Inf, hjust=-0.5, vjust=2, label= "p = 0.0664") +
+  labs(fill = "Trophic\nGroup")
 box5
 eco<-minnow_data$Trophic
 names(eco)<-rownames(minnow_data)
@@ -264,8 +292,11 @@ box6<-ggplot(minnow_data,aes(Trophic, acv.log, fill=Trophic))+
   geom_boxplot()+
   scale_fill_manual(values = c("HD" = "#33a02c", "AquaticInvertivore"="#b2df8a", "Omnivore"="grey", "AquaticInsectivore"="#a6cee3", "InsectLarvaphage"="#1f78b4", "Carnivore"="black"))+
   ylab("Log-Adjusted Abdominal Cavity Vol")+
-  xlab("Trophic Group")+
-  theme(legend.position='none', axis.text.x = element_blank())
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  annotate("text", x=-Inf, y=Inf, hjust=-0.5, vjust=2, label= "p = 0.5443") +
+  labs(fill = "Trophic\nGroup")
 box6
 eco<-minnow_data$Trophic
 names(eco)<-rownames(minnow_data)
@@ -274,4 +305,13 @@ summary(trophic.anova)
 gp <-  interaction (eco)
 PW <- pairwise(trophic.anova, groups = gp, covariate = NULL)
 summary(PW)
+```
+
+```{r supp boxplot figure}
+sup_box_figure <- ggarrange(box4, box5, box6,
+                    labels = c("a", "b", "c"),
+                    ncol = 3, nrow = 1, 
+                    common.legend=TRUE, legend="bottom")
+sup_box_figure
+ggsave("SUP_BOX.png", plot=last_plot(), path= "C:/Users/Test 1/OneDrive/Desktop/GitHubRepos/minnow", dpi=300, width=8, height=4, units="in")
 ```
