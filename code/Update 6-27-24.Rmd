@@ -120,6 +120,7 @@ reg_figure <- ggarrange(reg1, reg2, reg3,
                     common.legend=TRUE, legend="top")
 reg_figure
 ggsave("REG_TEST.png", plot=last_plot(), path= "C:/Users/Test 1/OneDrive/Desktop/GitHubRepos/minnow", dpi=300, width=5, height=7.78, units="in")
+ggsave("REG_PDF.pdf", plot=last_plot(), path= "C:/Users/Test 1/OneDrive/Desktop/GitHubRepos/minnow", dpi=300, width=5, height=7.78, units="in")
 ```
 
 ```{r size-corrected intestine length vs trophic group}
