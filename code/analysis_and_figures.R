@@ -5,7 +5,7 @@ require(ape)
 require(geomorph)
 
 tree<-fishtree_phylogeny()
-dat3 <- readxl::read_xlsx("C:/Users/Test 1/OneDrive/Documents/AbCav Project/data_ouwie.xlsx")
+minnow_data <- readxl::read_xlsx("data/polished/data_ouwie.xlsx")
 rownames(dat3) <- dat3$Species
 d<-name.check(tree, dat3) 
 

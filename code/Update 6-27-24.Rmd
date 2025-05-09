@@ -19,6 +19,7 @@ require(ape)
 require(geomorph)
 require(ggplot2)
 require(ggpubr)
+require(readxl)
 ```
 
 ```{r loading dataset and checking phylogenetics}
@@ -27,7 +28,7 @@ require(ggpubr)
 tree<-fishtree_phylogeny()
 
 #uploading data
-minnow_data <- readxl::read_xlsx("C:/Users/Test 1/OneDrive/Documents/AbCav Project/data_ouwie.xlsx")
+minnow_data <- read_excel("data/polished/data_ouwie.xlsx")
 
 #checking data against tree
 rownames(minnow_data) <- minnow_data$Species
@@ -209,7 +210,7 @@ box_figure <- ggarrange(box1, box2, box3,
                     ncol = 3, nrow = 1, 
                     common.legend=TRUE, legend="bottom")
 box_figure
-ggsave("BOX_TEST.png", plot=last_plot(), path= "C:/Users/Test 1/OneDrive/Desktop/GitHubRepos/minnow", dpi=300, width=8, height=4, units="in")
+ggsave("BOX_TEST.png", plot=last_plot(), path= "/Users/gabriellacommisso/Desktop/sandbox", dpi=300, width=8, height=4, units="in")
 ```
 
 ```{r size-corrected supplementary figures}
